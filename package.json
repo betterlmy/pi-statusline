@@ -1,0 +1,55 @@
+{
+  "name": "@betterlmy/pi-statusline",
+  "version": "0.1.0",
+  "description": "Modular, pluggable, and fully configurable statusline/footer extension engine for Pi Coding Agent.",
+  "type": "module",
+  "main": "src/index.ts",
+  "files": [
+    "src",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE"
+  ],
+  "pi": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "pi-package",
+    "pi",
+    "statusline",
+    "footer",
+    "status-bar",
+    "tps",
+    "telemetry",
+    "metrics"
+  ],
+  "author": "betterlmy <betterlmy@icloud.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/betterlmy/pi-statusline.git"
+  },
+  "bugs": {
+    "url": "https://github.com/betterlmy/pi-statusline/issues"
+  },
+  "homepage": "https://github.com/betterlmy/pi-statusline#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": ">=0.84.0"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": ">=0.84.0",
+    "@earendil-works/pi-tui": "*",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.3"
+  }
+}
