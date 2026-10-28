@@ -337,13 +337,13 @@ export class TPSItem implements StatuslineItem<TPSConfig> {
       parts.push(formatDuration(t.timing.totalMs / 1000));
     }
 
-    // Token counts
-    if (config.showTokens !== false && (t.tokens.input > 0 || t.tokens.output > 0)) {
+    // Token counts (disabled by default)
+    if (config.showTokens === true && (t.tokens.input > 0 || t.tokens.output > 0)) {
       parts.push(`↑${formatTokens(t.tokens.input)} ↓${formatTokens(t.tokens.output)}`);
     }
 
-    // Stalls
-    if (config.showStall !== false && t.timing.stallMs > 0) {
+    // Stalls (disabled by default)
+    if (config.showStall === true && t.timing.stallMs > 0) {
       const stallDuration = formatDuration(t.timing.stallMs / 1000);
       parts.push(theme.fg("warning", `stall ${stallDuration}×${t.timing.stallCount}`));
     }

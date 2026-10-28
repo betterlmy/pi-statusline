@@ -70,7 +70,7 @@ Switch modes anytime via command:
 Provides high-precision generation performance statistics:
 
 ```
-TPS 48.2 tok/s · TTFT 0.6s · 2.4s · ↑620 ↓1.4k
+TPS 48.2 tok/s · TTFT 0.6s · 2.4s
 ```
 
 During streaming, it renders an animated live estimate:
@@ -83,8 +83,8 @@ Configurable options for `tps`:
 - `live`: Show live estimate during streaming (default: `true`).
 - `showTTFT`: Show Time-To-First-Token in seconds (default: `true`).
 - `showTotalTime`: Show total wall-clock elapsed time (default: `true`).
-- `showTokens`: Show input and output token counts (default: `true`).
-- `showStall`: Show stall count and duration when stalls >= 500ms occur (default: `true`).
+- `showTokens`: Show input and output token counts (default: `false`).
+- `showStall`: Show stall count and duration when stalls >= 500ms occur (default: `false`).
 - `stallThresholdMs`: Threshold in ms to classify inference pauses as stalls (default: `500`).
 
 ---

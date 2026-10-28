@@ -70,7 +70,7 @@ pi -e git:github.com/betterlmy/pi-statusline
 展示 LLM 生成性能遥测数据：
 
 ```
-TPS 48.2 tok/s · TTFT 0.6s · 2.4s · ↑620 ↓1.4k
+TPS 48.2 tok/s · TTFT 0.6s · 2.4s
 ```
 
 在模型流式输出时动态显示：
@@ -83,8 +83,8 @@ TPS 48.2 tok/s · TTFT 0.6s · 2.4s · ↑620 ↓1.4k
 - `live`: 流式输出时是否显示实时吞吐（默认: `true`）。
 - `showTTFT`: 是否展示首字延迟 TTFT（默认: `true`）。
 - `showTotalTime`: 是否展示单轮总耗时（默认: `true`）。
-- `showTokens`: 是否展示输入/输出 Token 吞吐（默认: `true`）。
-- `showStall`: 发生停顿（>= 500ms）时是否展示停顿时长与次数（默认: `true`）。
+- `showTokens`: 是否展示输入/输出 Token 吞吐（默认: `false`）。
+- `showStall`: 发生停顿（>= 500ms）时是否展示停顿时长与次数（默认: `false`）。
 - `stallThresholdMs`: 停顿判定阈值（默认: `500` 毫秒）。
 
 ---
