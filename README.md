@@ -27,7 +27,7 @@ When developers want additional telemetry (such as generation speed, latency, gi
 ### From npm (Recommended)
 
 ```bash
-pi install npm:@betterlmy/pi-statusline
+pi install npm:@betterlmy/pi-statusline 
 ```
 
 ### From GitHub
