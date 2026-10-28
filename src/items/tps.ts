@@ -78,6 +78,7 @@ export class TPSItem implements StatuslineItem<TPSConfig> {
 
   private pi?: ExtensionAPI;
   private currentTurnStart: number | null = null;
+  private firstTokenMs: number | null = null;
   private currentMsg: MessageTiming | null = null;
   private completedMessages: MessageTiming[] = [];
   private accumulatedTokens = { input: 0, output: 0 };
@@ -132,6 +133,7 @@ export class TPSItem implements StatuslineItem<TPSConfig> {
 
   onTurnStart(_event: unknown, ctx: ExtensionContext): void {
     this.currentTurnStart = performance.now();
+    this.firstTokenMs = null;
     this.completedMessages = [];
     this.currentMsg = null;
     this.accumulatedTokens = { input: 0, output: 0 };
@@ -147,7 +149,13 @@ export class TPSItem implements StatuslineItem<TPSConfig> {
     }
   }
 
-  onMessageStart(_event: unknown): void {
+  onMessageStart(event: unknown): void {
+    const evt = event as { message?: { role?: string } };
+    // Only track assistant messages (ignore user and toolResult messages)
+    if (evt?.message?.role && evt.message.role !== "assistant") {
+      return;
+    }
+
     this.isStreaming = true;
     this.currentMsg = {
       startTime: performance.now(),
@@ -161,9 +169,30 @@ export class TPSItem implements StatuslineItem<TPSConfig> {
   }
 
   onMessageUpdate(event: unknown, ctx: ExtensionContext): void {
-    if (!this.currentMsg) return;
+    const evt = event as { message?: { role?: string; content?: Array<{ type: string; text?: string }> } };
+    // Only track assistant messages
+    if (evt?.message?.role && evt.message.role !== "assistant") {
+      return;
+    }
+
     const now = performance.now();
-    const evt = event as { message?: { content?: Array<{ type: string; text?: string }> } };
+
+    // Capture turn-level TTFT on first assistant token update
+    if (this.firstTokenMs === null && this.currentTurnStart !== null) {
+      this.firstTokenMs = now;
+    }
+
+    if (!this.currentMsg) {
+      this.currentMsg = {
+        startTime: now,
+        firstUpdate: now,
+        lastUpdate: now,
+        stallMs: 0,
+        stallCount: 0,
+        inStall: false,
+        outputChars: 0,
+      };
+    }
 
     // Extract length if text is available
     if (evt?.message?.content) {
@@ -206,18 +235,22 @@ export class TPSItem implements StatuslineItem<TPSConfig> {
   }
 
   onMessageEnd(event: unknown): void {
-    this.isStreaming = false;
-    if (this.currentMsg) {
-      this.completedMessages.push(this.currentMsg);
-      this.currentMsg = null;
-    }
-
     const evt = event as {
       message?: {
         role?: string;
         usage?: { input?: number; output?: number };
       };
     };
+
+    if (evt?.message?.role && evt.message.role !== "assistant") {
+      return;
+    }
+
+    this.isStreaming = false;
+    if (this.currentMsg) {
+      this.completedMessages.push(this.currentMsg);
+      this.currentMsg = null;
+    }
 
     if (evt?.message?.usage) {
       this.accumulatedTokens.input += evt.message.usage.input || 0;
@@ -230,23 +263,37 @@ export class TPSItem implements StatuslineItem<TPSConfig> {
     const now = performance.now();
     const totalMs = now - this.currentTurnStart;
 
+    // Flush currentMsg if still active
+    if (this.currentMsg) {
+      this.completedMessages.push(this.currentMsg);
+      this.currentMsg = null;
+    }
+
     // Aggregate message stats
     let totalStallMs = 0;
     let totalStallCount = 0;
-    let firstTtftMs: number | null = null;
     let activeStreamMs = 0;
 
-    for (let i = 0; i < this.completedMessages.length; i++) {
-      const m = this.completedMessages[i];
+    for (const m of this.completedMessages) {
       totalStallMs += m.stallMs;
       totalStallCount += m.stallCount;
 
-      if (i === 0 && m.firstUpdate !== null) {
-        firstTtftMs = m.firstUpdate - this.currentTurnStart;
-      }
-
       if (m.firstUpdate !== null && m.lastUpdate !== null) {
         activeStreamMs += Math.max(0, m.lastUpdate - m.firstUpdate - m.stallMs);
+      }
+    }
+
+    // Robust TTFT calculation
+    let firstTtftMs: number | null = null;
+    if (this.firstTokenMs !== null) {
+      firstTtftMs = Math.max(0, this.firstTokenMs - this.currentTurnStart);
+    } else {
+      // Fallback: search completed messages
+      for (const m of this.completedMessages) {
+        if (m.firstUpdate !== null) {
+          firstTtftMs = Math.max(0, m.firstUpdate - this.currentTurnStart);
+          break;
+        }
       }
     }
 

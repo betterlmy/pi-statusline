@@ -106,3 +106,41 @@ test("TPSItem - disables rendering when configured off", () => {
 
   assert.equal(rendered, undefined, "Should return undefined when disabled");
 });
+
+test("TPSItem - captures TTFT reliably even when user/toolResult messages precede assistant stream", () => {
+  const item = new TPSItem();
+  const mockCtx = {
+    hasUI: true,
+    ui: {
+      theme: {
+        fg: (_c, t) => t,
+      },
+    },
+  };
+
+  item.onTurnStart({}, mockCtx);
+
+  // User or toolResult message starts and ends before assistant streams
+  item.onMessageStart({ message: { role: "user" } });
+  item.onMessageEnd({ message: { role: "user" } });
+
+  // Assistant message starts
+  item.onMessageStart({ message: { role: "assistant" } });
+  item.onMessageUpdate(
+    { message: { role: "assistant", content: [{ type: "text", text: "chunk 1" }] } },
+    mockCtx,
+  );
+  item.onMessageEnd({
+    message: { role: "assistant", usage: { input: 100, output: 20 } },
+  });
+
+  item.onTurnEnd({}, mockCtx);
+
+  const rendered = item.render(
+    { ctx: mockCtx, theme: mockCtx.ui.theme, isStreaming: false },
+    {},
+  );
+
+  assert.ok(rendered, "Should render output");
+  assert.ok(rendered.includes("TTFT"), "TTFT should be present even with preceding user messages");
+});
