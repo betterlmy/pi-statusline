@@ -4,8 +4,10 @@ import type { ItemRenderContext, StatuslineItem } from "../types.ts";
 export interface TPSConfig {
   enabled?: boolean;
   live?: boolean;
+  showTPSPrefix?: boolean;
   showTTFT?: boolean;
   showTotalTime?: boolean;
+  totalLabel?: string;
   showTokens?: boolean;
   showStall?: boolean;
   stallThresholdMs?: number;
@@ -311,7 +313,7 @@ export class TPSItem implements StatuslineItem<TPSConfig> {
           ? (this.liveEstimatedTokens / streamElapsed).toFixed(1)
           : "—";
 
-        return theme.fg("accent", `⚡ ${liveTps} tok/s`);
+        return theme.fg("accent", `⚡ ${liveTps}tok/s`);
       }
       return theme.fg("accent", "⚡ streaming...");
     }
@@ -324,18 +326,21 @@ export class TPSItem implements StatuslineItem<TPSConfig> {
     const t = this.lastTelemetry;
     const parts: string[] = [];
 
-    // TPS speed
-    const tpsStr = t.tps !== null ? `${t.tps.toFixed(1)} tok/s` : "—";
-    parts.push(theme.fg("success", `TPS ${tpsStr}`));
+    // Generation speed: omit "TPS " prefix by default, no space before tok/s
+    const prefix = config.showTPSPrefix ? "TPS " : "";
+    const tpsStr = t.tps !== null ? `${prefix}${t.tps.toFixed(1)}tok/s` : (config.showTPSPrefix ? "TPS —" : "—tok/s");
+    parts.push(theme.fg("success", tpsStr));
 
     // TTFT
     if (config.showTTFT !== false && t.timing.ttftMs !== null) {
       parts.push(`TTFT ${formatDuration(t.timing.ttftMs / 1000)}`);
     }
 
-    // Total wall-clock time
+    // Total wall-clock time (labeled "Total" to distinguish from TTFT)
     if (config.showTotalTime !== false) {
-      parts.push(formatDuration(t.timing.totalMs / 1000));
+      const label = typeof config.totalLabel === "string" ? config.totalLabel : "Total";
+      const totalPrefix = label.length > 0 ? `${label} ` : "";
+      parts.push(`${totalPrefix}${formatDuration(t.timing.totalMs / 1000)}`);
     }
 
     // Token counts (disabled by default)

@@ -71,19 +71,21 @@ Switch modes anytime via command:
 Provides high-precision generation performance statistics:
 
 ```
-TPS 48.2 tok/s TTFT 0.6s 2.4s
+48.2tok/s TTFT 0.6s Total 2.4s
 ```
 
 During streaming, it renders an animated live estimate:
 ```
-⚡ 45.0 tok/s
+⚡ 45.0tok/s
 ```
 
 Configurable options for `tps`:
 - `enabled`: Toggle the item on/off (default: `true`).
 - `live`: Show live estimate during streaming (default: `true`).
+- `showTPSPrefix`: Show `TPS ` prefix before generation rate (default: `false`).
 - `showTTFT`: Show Time-To-First-Token in seconds (default: `true`).
 - `showTotalTime`: Show total wall-clock elapsed time (default: `true`).
+- `totalLabel`: Label prefixed before total elapsed time (default: `"Total"`).
 - `showTokens`: Show input and output token counts (default: `false`).
 - `showStall`: Show stall count and duration when stalls >= 500ms occur (default: `false`).
 - `separator`: Custom separator between sub-metrics (default: `" "` space).

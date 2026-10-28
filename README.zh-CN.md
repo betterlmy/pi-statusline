@@ -71,19 +71,21 @@ pi -e git:github.com/betterlmy/pi-statusline
 展示 LLM 生成性能遥测数据：
 
 ```
-TPS 48.2 tok/s TTFT 0.6s 2.4s
+48.2tok/s TTFT 0.6s Total 2.4s
 ```
 
 在模型流式输出时动态显示：
 ```
-⚡ 45.0 tok/s
+⚡ 45.0tok/s
 ```
 
 `tps` 的可配置项：
 - `enabled`: 是否启用（默认: `true`）。
 - `live`: 流式输出时是否显示实时吞吐（默认: `true`）。
+- `showTPSPrefix`: 是否在速度前增加 `TPS ` 前缀（默认: `false`）。
 - `showTTFT`: 是否展示首字延迟 TTFT（默认: `true`）。
 - `showTotalTime`: 是否展示单轮总耗时（默认: `true`）。
+- `totalLabel`: 总耗时前的提示语（默认: `"Total"`，如设为空字符串则不显示提示语）。
 - `showTokens`: 是否展示输入/输出 Token 吞吐（默认: `false`）。
 - `showStall`: 发生停顿（>= 500ms）时是否展示停顿时长与次数（默认: `false`）。
 - `separator`: 子指标之间的分隔符（默认: 单个空格 `" "`）。

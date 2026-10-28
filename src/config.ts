@@ -9,8 +9,10 @@ export const DEFAULT_CONFIG: StatuslineConfig = {
     tps: {
       enabled: true,
       live: true,
+      showTPSPrefix: false,
       showTTFT: true,
       showTotalTime: true,
+      totalLabel: "Total",
       showTokens: false,
       showStall: false,
       stallThresholdMs: 500,

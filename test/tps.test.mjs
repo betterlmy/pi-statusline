@@ -67,15 +67,19 @@ test("TPSItem - calculates turn telemetry and renders idle view", async () => {
   });
 
   assert.ok(rendered, "Rendered output should not be empty");
-  assert.ok(rendered.includes("TPS"), "Should contain TPS label");
+  assert.ok(rendered.includes("tok/s"), "Should contain tok/s");
+  assert.ok(!rendered.includes("TPS "), "Should omit TPS prefix by default");
   assert.ok(rendered.includes("TTFT"), "Should contain TTFT label");
+  assert.ok(rendered.includes("Total "), "Should contain Total prefix for total duration");
   assert.ok(rendered.includes("↑150 ↓50"), "Should display token count when explicitly enabled");
 
   // Render with defaults (showTokens and showStall should be omitted, separator is space)
   const defaultRendered = item.render(renderContext, {});
   assert.ok(defaultRendered, "Default rendered output should exist");
-  assert.ok(defaultRendered.includes("TPS"), "Default should have TPS");
+  assert.ok(defaultRendered.includes("tok/s"), "Default should have tok/s");
+  assert.ok(!defaultRendered.includes("TPS "), "Default should not have TPS prefix");
   assert.ok(defaultRendered.includes("TTFT"), "Default should have TTFT");
+  assert.ok(defaultRendered.includes("Total "), "Default should have Total label");
   assert.ok(!defaultRendered.includes("↑"), "Default should not display tokens");
   assert.ok(!defaultRendered.includes("stall"), "Default should not display stalls");
   assert.ok(!defaultRendered.includes(" · "), "Default should use space separator, not middle dot");
