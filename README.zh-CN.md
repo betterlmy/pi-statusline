@@ -60,6 +60,7 @@ pi -e git:github.com/betterlmy/pi-statusline
 | `/statusline` 或 `/statusline list` | 查看当前模式及所有已注册指标项的开关状态 |
 | `/statusline toggle <item>` | 快速开关指定指标项（如 `/statusline toggle tps`） |
 | `/statusline mode <append\|replace>` | 在纯追加模式与全盘接管模式之间切换 |
+| `/statusline sep <separator>` | 自定义分隔符字符串（如 `"/statusline sep ' '"` 或 `"/statusline sep ' · '"`） |
 
 ---
 
@@ -70,7 +71,7 @@ pi -e git:github.com/betterlmy/pi-statusline
 展示 LLM 生成性能遥测数据：
 
 ```
-TPS 48.2 tok/s · TTFT 0.6s · 2.4s
+TPS 48.2 tok/s TTFT 0.6s 2.4s
 ```
 
 在模型流式输出时动态显示：
@@ -85,6 +86,7 @@ TPS 48.2 tok/s · TTFT 0.6s · 2.4s
 - `showTotalTime`: 是否展示单轮总耗时（默认: `true`）。
 - `showTokens`: 是否展示输入/输出 Token 吞吐（默认: `false`）。
 - `showStall`: 发生停顿（>= 500ms）时是否展示停顿时长与次数（默认: `false`）。
+- `separator`: 子指标之间的分隔符（默认: 单个空格 `" "`）。
 - `stallThresholdMs`: 停顿判定阈值（默认: `500` 毫秒）。
 
 ---

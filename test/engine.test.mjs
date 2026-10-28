@@ -18,6 +18,11 @@ test("resolveConfig - merges partial user overrides", () => {
   assert.equal(cfg.items.tps.showTTFT, true, "Should retain default properties not overridden");
 });
 
+test("resolveConfig - default separator is single space", () => {
+  const defaultCfg = resolveConfig();
+  assert.equal(defaultCfg.separator, " ");
+});
+
 test("StatuslineEngine - registers items and builds formatted output in append mode", () => {
   let registeredStatus = null;
   const mockPi = {

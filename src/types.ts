@@ -18,6 +18,7 @@ export interface ItemRenderContext {
   theme: ThemeLike;
   isStreaming: boolean;
   width?: number;
+  separator?: string;
 }
 
 /**
@@ -85,7 +86,7 @@ export interface StatuslineConfig {
    */
   mode: "append" | "replace";
 
-  /** Separator between enabled items. Default: " · " */
+  /** Separator between enabled items. Default: " " (single space) */
   separator: string;
 
   /** Optional prefix for the whole statusline. */

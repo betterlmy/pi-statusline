@@ -71,13 +71,18 @@ test("TPSItem - calculates turn telemetry and renders idle view", async () => {
   assert.ok(rendered.includes("TTFT"), "Should contain TTFT label");
   assert.ok(rendered.includes("↑150 ↓50"), "Should display token count when explicitly enabled");
 
-  // Render with defaults (showTokens and showStall should be omitted)
+  // Render with defaults (showTokens and showStall should be omitted, separator is space)
   const defaultRendered = item.render(renderContext, {});
   assert.ok(defaultRendered, "Default rendered output should exist");
   assert.ok(defaultRendered.includes("TPS"), "Default should have TPS");
   assert.ok(defaultRendered.includes("TTFT"), "Default should have TTFT");
   assert.ok(!defaultRendered.includes("↑"), "Default should not display tokens");
   assert.ok(!defaultRendered.includes("stall"), "Default should not display stalls");
+  assert.ok(!defaultRendered.includes(" · "), "Default should use space separator, not middle dot");
+
+  // Custom separator in item config
+  const customSepRendered = item.render(renderContext, { separator: " | " });
+  assert.ok(customSepRendered.includes(" | "), "Should honor custom separator");
 });
 
 test("TPSItem - disables rendering when configured off", () => {

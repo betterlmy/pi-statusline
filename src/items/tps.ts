@@ -9,6 +9,7 @@ export interface TPSConfig {
   showTokens?: boolean;
   showStall?: boolean;
   stallThresholdMs?: number;
+  separator?: string;
 }
 
 export interface TurnTelemetry {
@@ -348,6 +349,7 @@ export class TPSItem implements StatuslineItem<TPSConfig> {
       parts.push(theme.fg("warning", `stall ${stallDuration}×${t.timing.stallCount}`));
     }
 
-    return parts.join(" · ");
+    const separator = typeof config.separator === "string" ? config.separator : (context.separator ?? " ");
+    return parts.join(separator);
   }
 }

@@ -234,6 +234,7 @@ export class StatuslineEngine {
       ctx,
       theme: ctx.ui.theme,
       isStreaming: this.isStreaming,
+      separator: this.config.separator,
     };
 
     const orderedItems = this.getOrderedItems();
@@ -313,6 +314,14 @@ export class StatuslineEngine {
           return;
         }
 
+        if ((sub === "sep" || sub === "separator") && parts.length > 1) {
+          const rawSep = args.trim().slice(sub.length).trim();
+          const unquoted = rawSep.replace(/^["'](.*)["']$/, "$1");
+          this.updateConfig({ separator: unquoted });
+          ctx.ui.notify(`Separator set to "${unquoted}"`, "info");
+          return;
+        }
+
         if (sub === "list" || !sub) {
           const items = this.registry.getAll();
           const infoLines = items.map((it) => {
@@ -321,12 +330,13 @@ export class StatuslineEngine {
           });
 
           const summary = [
-            `pi-statusline [mode: ${this.config.mode}]`,
+            `pi-statusline [mode: ${this.config.mode}, separator: "${this.config.separator}"]`,
             ...infoLines,
             "",
             "Usage:",
-            "  /statusline toggle <item>  - Toggle an item",
-            "  /statusline mode <mode>    - Set mode (append | replace)",
+            "  /statusline toggle <item>     - Toggle an item",
+            "  /statusline mode <mode>       - Set mode (append | replace)",
+            "  /statusline sep <separator>   - Set separator (e.g. ' ' or ' · ')",
           ].join("\n");
 
           ctx.ui.notify(summary, "info");

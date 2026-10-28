@@ -2,7 +2,7 @@ import type { StatuslineConfig } from "./types.ts";
 
 export const DEFAULT_CONFIG: StatuslineConfig = {
   mode: "append",
-  separator: " · ",
+  separator: " ",
   prefix: "",
   suffix: "",
   items: {
@@ -14,6 +14,7 @@ export const DEFAULT_CONFIG: StatuslineConfig = {
       showTokens: false,
       showStall: false,
       stallThresholdMs: 500,
+      separator: " ",
     },
   },
 };

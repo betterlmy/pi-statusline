@@ -60,6 +60,7 @@ Switch modes anytime via command:
 | `/statusline` or `/statusline list` | Show active mode and status of all registered items |
 | `/statusline toggle <item>` | Toggle an item on/off (e.g. `/statusline toggle tps`) |
 | `/statusline mode <append\|replace>` | Switch between non-destructive append and full footer replace |
+| `/statusline sep <separator>` | Set the separator string (e.g. `"/statusline sep ' '"` or `"/statusline sep ' · '"`) |
 
 ---
 
@@ -70,7 +71,7 @@ Switch modes anytime via command:
 Provides high-precision generation performance statistics:
 
 ```
-TPS 48.2 tok/s · TTFT 0.6s · 2.4s
+TPS 48.2 tok/s TTFT 0.6s 2.4s
 ```
 
 During streaming, it renders an animated live estimate:
@@ -85,6 +86,7 @@ Configurable options for `tps`:
 - `showTotalTime`: Show total wall-clock elapsed time (default: `true`).
 - `showTokens`: Show input and output token counts (default: `false`).
 - `showStall`: Show stall count and duration when stalls >= 500ms occur (default: `false`).
+- `separator`: Custom separator between sub-metrics (default: `" "` space).
 - `stallThresholdMs`: Threshold in ms to classify inference pauses as stalls (default: `500`).
 
 ---
